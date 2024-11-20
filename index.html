@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO_LIST</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   <div id="particles-js"></div>
+   <div class="main-container">
+    <div class="container">
+      <marquee behavior="alternate" direction="right"><h1>TO-DO LIST APP</h1></marquee>
+      <div class="input-container">
+        <input
+          type="text"
+          id="todoInput"
+          placeholder="Add a new task"
+          autocomplete="off"
+        />
+        <button onclick="addTodo()">Add</button>
+      </div>
+      <ul id="todoLists">
+        <!-- Existing tasks will be show here -->
+      </ul>
+    </div>
+  </div>
+   <script src="particles.js"></script>
+   <script src="app.js"></script>
+   <script>const user = "user";
+    function loadOldTaskList() {
+      let allTasks = JSON.parse(localStorage.getItem(user)) || [];
+      if (allTasks.length) {
+        allTasks.forEach((element, index) => {
+          addTodoItem(element, index);
+        });
+      }
+    }
+    function addTodoItem(task, index) {
+      let todoList = document.getElementById("todoLists");
+      let newTodoList = document.createElement("li");
+      newTodoList.textContent = task;
+      let deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", function () {
+        deleteTask(index);
+      });
+      newTodoList.appendChild(deleteButton);
+      todoList.appendChild(newTodoList);
+    }
+    function addTodo() {
+      var todoInput = document.getElementById("todoInput").value;
+      if (todoInput.trim() !== "") {
+        var todoLists = JSON.parse(localStorage.getItem(user)) || [];
+        todoLists.push(todoInput);
+        saveTodoTasks(todoLists);
+        addTodoItem(todoInput, todoLists.length - 1);
+        document.getElementById("todoInput").value = "";
+      }
+    }
+    function saveTodoTasks(task) {
+      localStorage.setItem(user, JSON.stringify(task));
+    }
+    function deleteTask(index) {
+      var tasks = JSON.parse(localStorage.getItem(user)) || [];
+      tasks.splice(index, 1);
+      saveTodoTasks(tasks);
+      renderTasks();
+    }
+    function renderTasks() {
+      var todoList = document.getElementById("todoLists");
+      todoList.innerHTML = "";
+      loadOldTaskList();
+    }
+    loadOldTaskList();</script>
+    
+</body>
+</html>
